@@ -51,4 +51,7 @@ char *_itoa(int num, char *str, int base)
 
 	return str;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 644fe1499963dd942c43101c944f14fd760de41e
