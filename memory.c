@@ -25,7 +25,6 @@ void init_buffer(buffer_t *b)
  */
 int flush_buffer(buffer_t *b)
 {
-<<<<<<< HEAD
     int written = write(1, b->buffer, b->index);
     if (written == -1)
         exit(1);
@@ -34,14 +33,4 @@ int flush_buffer(buffer_t *b)
     memset(b->buffer, 0, BUFFER_SIZE);
 
     return (written);
-=======
-	int written = write(1, b->buffer, b->index);
-	if (written == -1)
-		exit(1);
-
-	b->index = 0;
-	memset(b->buffer, 0, BUFFER_SIZE);
-
-	return (written);
->>>>>>> 644fe1499963dd942c43101c944f14fd760de41e
 }

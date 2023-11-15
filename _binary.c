@@ -39,7 +39,4 @@ int _binary(unsigned int num, buffer_t *buffer)
 	free(binary_str);
 	return count;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 644fe1499963dd942c43101c944f14fd760de41e
