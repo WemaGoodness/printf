@@ -57,4 +57,3 @@ int write_hex(char c, buffer_t *buffer, int is_uppercase)
 
 	return count;
 }
-
