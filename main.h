@@ -26,5 +26,6 @@ int _printf(const char *format, ...);
 char *_itoa(int num, char *str, int base);
 char *_utoa(unsigned int num, char *str, int base);
 int _binary(unsigned int, buffer_t *);
+int print_address(va_list l, buffer_t *buffer);
 
 #endif
