@@ -1,32 +1,77 @@
-#ifndef MAIN_h
+#ifndef MAIN_H
 #define MAIN_H
 
-#include <stdarg.h>
-#include <unistd.h>
 #include <stdlib.h>
-#include <string.h>
-
-#define BUFFER_SIZE 1024
+#include <stdarg.h>
 
 /**
- * struct buffer - struct for handling the buffer
- * @buffer: pointer to a character buffer
- * @index: index to keep track of the current position in the buffer
+ * struct flags - struct containing flags to "turn on"
+ * when a flag specifier is passed to _printf()
+ * @plus: flag for the '+' character
+ * @space: flag for the ' ' character
+ * @hash: flag for the '#' character
  */
-typedef struct buffer
+typedef struct flags
 {
-	char *buffer;
-	int index;
-} buffer_t;
+	int plus;
+	int space;
+	int hash;
+} flags_t;
 
-int _putchar(char c);
-void init_buffer(buffer_t *b);
-int flush_buffer(buffer_t *b);
+/**
+ * struct printHandler - struct to choose the right function depending
+ * on the format specifier passed to _printf()
+ * @c: format specifier
+ * @f: pointer to the correct printing function
+ */
+typedef struct printHandler
+{
+	char c;
+	int (*f)(va_list ap, flags_t *f);
+} ph;
+
+/* print_nums */
+int print_int(va_list l, flags_t *f);
+void print_number(int n);
+int print_unsigned(va_list l, flags_t *f);
+int count_digit(int i);
+
+/* print_bases */
+int print_hex(va_list l, flags_t *f);
+int print_hex_big(va_list l, flags_t *f);
+int print_binary(va_list l, flags_t *f);
+int print_octal(va_list l, flags_t *f);
+
+/* converter */
+char *convert(unsigned long int num, int base, int lowercase);
+
+/* _printf */
 int _printf(const char *format, ...);
-char *_itoa(int num, char *str, int base);
-char *_utoa(unsigned int num, char *str, int base);
-int _binary(unsigned int, buffer_t *);
-int print_S(char *str, buffer_t *buffer, int is_uppercase);
-int write_hex(char c, buffer_t *buffer, int is_uppercase);
+
+/* get_print */
+int (*get_print(char s))(va_list, flags_t *);
+
+/* get_flag */
+int get_flag(char s, flags_t *f);
+
+/* print_alpha */
+int print_string(va_list l, flags_t *f);
+int print_char(va_list l, flags_t *f);
+
+/* write_funcs */
+int _putchar(char c);
+int _puts(char *str);
+
+/* print_custom */
+int print_rot13(va_list l, flags_t *f);
+int print_rev(va_list l, flags_t *f);
+int print_bigS(va_list l, flags_t *f);
+
+/* print_address */
+int print_address(va_list l, flags_t *f);
+
+/* print_percent */
+int print_percent(va_list l, flags_t *f);
+
 
 #endif

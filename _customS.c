@@ -1,59 +1,109 @@
 #include "main.h"
 
 /**
- * print_S - handles %S
- * @str: string to print
- * @buffer: buffer to store result
- *
- * Return: Number of characters printed
+ * print_bigS - Non printable characters
+ * (0 < ASCII value < 32 or >= 127) are
+ * printed this way: \x, followed by the ASCII code
+ * value in hexadecimal (upper case - always 2 characters)
+ * @l: va_list arguments from _printf
+ * @f: pointer to the struct flags that determines
+ * if a flag is passed to _printf
+ * Return: number of char printed
  */
-int print_S(char *str, buffer_t *buffer, int is_uppercase)
+int print_bigS(va_list l, flags_t *f)
 {
-	int count = 0;
+	int i, count = 0;
+	char *res;
+	char *s = va_arg(l, char *);
 
-	for (; *str; str++)
+	(void)f;
+	if (!s)
+		return (_puts("(null)"));
+
+	for (i = 0; s[i]; i++)
 	{
-		if (*str < 32 || *str >= 127)
+		if (s[i] > 0 && (s[i] < 32 || s[i] >= 127))
 		{
-			if (buffer->index + 4 >= BUFFER_SIZE)
-				count += flush_buffer(buffer);
-
-			count += write(1, "\\x", 2);
-			count += write_hex(*str, buffer, is_uppercase);
+			_puts("\\x");
+			count += 2;
+			res = convert(s[i], 16, 0);
+			if (!res[1])
+				count += _putchar('0');
+			count += _puts(res);
 		}
 		else
-		{
-			if (buffer->index == BUFFER_SIZE)
-				count += flush_buffer(buffer);
-
-			buffer->buffer[buffer->index++] = *str;
-		}
+			count += _putchar(s[i]);
 	}
-
-	return count;
+	return (count);
 }
 
 /**
- * write_hex - write the hexadecimal
- * representation
- * @c: character to print
- * @buffer: buffer to store result
- * @is_uppercase: caps letter
- *
- * Return: Number of characters printed
+ * print_rev - prints a string in reverse
+ * @l: argument from _printf
+ * @f: pointer to the struct flags that determines
+ * if a flag is passed to _printf
+ * Return: length of the printed string
  */
-int write_hex(char c, buffer_t *buffer, int is_uppercase)
+int print_rev(va_list l, flags_t *f)
 {
-	int count = 0;
-	char hex_digits[] = "0123456789ABCDEF";
+	int i = 0, j;
+	char *s = va_arg(l, char *);
 
-	buffer->buffer[buffer->index++] = hex_digits[(c >> 4) & 0xF];
-	if (buffer->index == BUFFER_SIZE)
-		count += flush_buffer(buffer);
+	(void)f;
+	if (!s)
+		s = "(null)";
 
-	buffer->buffer[buffer->index++] = is_uppercase ? hex_digits[c & 0xF] : hex_digits[c & 0xF] + 32;
-	if (buffer->index == BUFFER_SIZE)
-		count += flush_buffer(buffer);
+	while (s[i])
+		i++;
 
-	return count;
+	for (j = i - 1; j >= 0; j--)
+		_putchar(s[j]);
+
+	return (i);
 }
+
+/**
+ * print_rot13 - prints a string using rot13
+ * @l: list of arguments from _printf
+ * @f: pointer to the struct flags that determines
+ * if a flag is passed to _printf
+ * Return: length of the printed string
+ */
+int print_rot13(va_list l, flags_t *f)
+{
+	int i, j;
+	char rot13[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	char ROT13[] = "nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM";
+	char *s = va_arg(l, char *);
+
+	(void)f;
+	for (j = 0; s[j]; j++)
+	{
+		if (s[j] < 'A' || (s[j] > 'Z' && s[j] < 'a') || s[j] > 'z')
+			_putchar(s[j]);
+		else
+		{
+			for (i = 0; i <= 52; i++)
+			{
+				if (s[j] == rot13[i])
+					_putchar(ROT13[i]);
+			}
+		}
+	}
+
+	return (j);
+}
+
+/**
+ * print_percent - prints a percent
+ * @l: va_list arguments from _printf
+ * @f: pointer to the struct flags in which we turn the flags on
+ * Return: number of char printed
+ */
+int print_percent(va_list l, flags_t *f)
+{
+	(void)l;
+	(void)f;
+	return (_putchar('%'));
+}
+
